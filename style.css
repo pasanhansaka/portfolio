@@ -180,8 +180,19 @@ body::after{
 /* ============================= NAV ============================= */
 nav{
   position:fixed; top:0; left:0; right:0; z-index:70;
-  padding:20px 32px; display:flex; align-items:center; justify-content:space-between;
+  padding:24px 32px; display:flex; align-items:center; justify-content:space-between;
   font-family:var(--font-mono);
+  transition: padding 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+nav.nav-scrolled {
+  padding: 14px 32px;
+  background: rgba(5, 2, 8, 0.72);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+[data-theme="light"] nav.nav-scrolled {
+  background: rgba(246, 244, 251, 0.72);
 }
 .brand{ font-weight:600; font-size:13px; letter-spacing:2px; color:var(--heading); text-decoration:none; cursor:pointer; }
 .brand .dot{ color:var(--magenta); }
@@ -404,13 +415,147 @@ footer{ border-top:1px solid var(--line); margin-top:90px; padding:34px 0 44px; 
  
 /* ============================= REVEAL UTILS ============================= */
 .reveal{
-  opacity:0; transform:translateY(46px) scale(.97);
+  opacity:0; transform:translateY(30px) scale(.98);
   clip-path:inset(0 0 100% 0 round 8px);
-  transition:opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1), clip-path .8s cubic-bezier(.2,.8,.2,1);
+  transition:opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1), clip-path .8s cubic-bezier(.16,1,.3,1);
   will-change:transform,opacity,clip-path;
 }
 .reveal.in{ opacity:1; transform:translateY(0) scale(1); clip-path:inset(0 0 0% 0 round 8px); }
- 
+
+/* ============================= HUD DIAGNOSTICS ============================= */
+.hud-diagnostics {
+  position: fixed; bottom: 24px; left: 32px; z-index: 60;
+  display: flex; gap: 14px; font-family: var(--font-mono); font-size: 9.5px;
+  letter-spacing: 1px; color: var(--muted-dim); pointer-events: none;
+}
+.hud-diag-item {
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(124, 92, 255, 0.05); border: 1px solid var(--line);
+  padding: 4px 10px; border-radius: 3px; backdrop-filter: blur(4px);
+}
+.hud-diag-item span.diag-label { color: var(--muted); font-weight: 600; }
+.hud-diag-item span:not(.diag-label) { color: var(--cyan); text-shadow: 0 0 4px rgba(53,240,201,0.4); }
+@media (max-width: 860px) { .hud-diagnostics { display: none; } }
+
+/* ============================= SOUND TOGGLE ============================= */
+.sound-toggle {
+  width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line-bright);
+  background: transparent; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: border-color .3s, background-color .3s; flex-shrink: 0;
+}
+.sound-toggle:hover { border-color: var(--magenta); background-color: rgba(255, 63, 168, 0.05); }
+.sound-toggle svg { width: 14px; height: 14px; fill: var(--text); stroke: none; transition: fill .3s; }
+.sound-toggle .icon-volume-off { display: none; }
+.sound-toggle.muted .icon-volume-on { display: none; }
+.sound-toggle.muted .icon-volume-off { display: block; fill: var(--muted); }
+
+/* ============================= CLI TERMINAL BUTTON ============================= */
+.terminal-trigger-btn {
+  font-family: var(--font-mono); font-weight: 600; font-size: 10.5px;
+  letter-spacing: 2px; color: var(--cyan); text-decoration: none; text-transform: uppercase;
+  background: transparent; border: none; cursor: pointer; transition: color .3s, text-shadow .3s;
+}
+.terminal-trigger-btn:hover { color: var(--magenta); text-shadow: 0 0 8px var(--magenta); }
+
+/* ============================= RETRO-FUTURISTIC TERMINAL ============================= */
+#terminal-overlay {
+  position: fixed; inset: 0; z-index: 9990;
+  background: rgba(5, 2, 8, 0.85); backdrop-filter: blur(12px);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 60px 32px 32px; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+[data-theme="light"] #terminal-overlay {
+  background: rgba(246, 244, 251, 0.85);
+}
+#terminal-overlay.terminal-hidden {
+  transform: translateY(-100%); opacity: 0; pointer-events: none;
+}
+.terminal-container {
+  width: min(880px, 100%); max-height: calc(100vh - 120px);
+  background: var(--ink); border: 1px solid var(--line-bright); border-radius: 8px;
+  box-shadow: 0 20px 60px -15px rgba(124, 92, 255, 0.3);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.terminal-header {
+  background: var(--ink-2); border-bottom: 1px solid var(--line);
+  padding: 12px 18px; display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px; color: var(--muted);
+}
+.terminal-title { display: flex; align-items: center; gap: 8px; color: var(--heading); }
+.terminal-controls { display: flex; align-items: center; gap: 18px; }
+.terminal-help-hint { font-size: 10px; color: var(--muted-dim); text-transform: uppercase; }
+.terminal-close-btn {
+  background: transparent; border: none; color: var(--muted); font-size: 13px;
+  cursor: pointer; transition: color .2s;
+}
+.terminal-close-btn:hover { color: var(--magenta); }
+.terminal-body {
+  padding: 20px; display: flex; flex-direction: column; gap: 14px;
+  font-family: var(--font-mono); font-size: 12px; line-height: 1.6;
+}
+.terminal-output {
+  overflow-y: auto; max-height: 380px; display: flex; flex-direction: column; gap: 8px;
+  scrollbar-width: thin; scrollbar-color: var(--line) transparent;
+  padding-right: 8px;
+}
+.terminal-output::-webkit-scrollbar { width: 4px; }
+.terminal-output::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+.terminal-line { word-break: break-all; white-space: pre-wrap; color: var(--text); }
+.terminal-line.user-cmd { color: var(--magenta); font-weight: 500; }
+.terminal-line.system-msg { color: var(--muted); }
+.terminal-line.success-msg { color: var(--cyan); text-shadow: 0 0 3px rgba(53,240,201,0.3); }
+.terminal-line.error-msg { color: var(--magenta); }
+.terminal-input-line {
+  display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+.terminal-prompt { color: var(--cyan); font-weight: bold; }
+#terminalInput {
+  flex-grow: 1; background: transparent; border: none; outline: none;
+  color: var(--heading); font-family: var(--font-mono); font-size: 12.5px;
+}
+
+/* ============================= SCANS & OVERLAYS ============================= */
+/* Futuristic Scanlines */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 996; pointer-events: none;
+  background: linear-gradient(rgba(18, 10, 34, 0) 50%, rgba(0, 0, 0, 0.22) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
+  background-size: 100% 4px, 4px 100%; opacity: 0.12;
+}
+[data-theme="light"] body::before { opacity: 0.035; }
+
+/* Glowing scanner line overlay sweep */
+body::after {
+  content: ''; position: fixed; inset: 0; z-index: 998; pointer-events: none;
+  opacity: .03; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* cyber scanning line */
+.cyber-scanner {
+  position: fixed; left: 0; width: 100%; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--violet), var(--magenta), var(--cyan), transparent);
+  box-shadow: 0 0 10px var(--violet); z-index: 997; pointer-events: none;
+  opacity: 0.12; animation: scanSweep 8s linear infinite;
+}
+@keyframes scanSweep {
+  0% { top: -10px; }
+  100% { top: calc(100% + 10px); }
+}
+
+/* ============================= CYBER GLITCH ============================= */
+.decrypt.accent {
+  animation: textGlitch 8s ease-in-out infinite;
+}
+@keyframes textGlitch {
+  0%, 94%, 98%, 100% { text-shadow: none; transform: skew(0); }
+  95% { text-shadow: 1.5px 0 var(--magenta), -1.5px 0 var(--cyan); transform: skew(-1deg); }
+  97% { text-shadow: -1.5px 0 var(--magenta), 1.5px 0 var(--cyan); transform: skew(1deg); }
+}
+
+/* ============================= REDUCED MOTION ============================= */
 @media (prefers-reduced-motion: reduce){
   *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; }
+  .cyber-scanner, .decrypt.accent { animation: none !important; }
 }
+
