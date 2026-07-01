@@ -32,11 +32,11 @@
 <div class="bg-grid"></div>
 <div class="bg-spot" id="bgspot"></div>
 <div class="bg-glow"></div>
+<canvas id="fx-canvas"></canvas>
 <div id="scroll-progress"></div>
 
 <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
 
-<div class="hud-clock"><span class="dot"></span><span id="clock">--:--:-- LKT</span></div>
 
 <div class="hud-rail left"><span class="rail-line"></span><span>SCROLL TO EXPLORE</span></div>
 <div class="hud-rail right">
@@ -47,7 +47,7 @@
 </div>
 
 <nav>
-  <div class="brand">PASAN.HANSAKA<span class="dot">_</span></div>
+  <a href="#top" class="brand" data-cursor="TOP">PASAN.HANSAKA<span class="dot">_</span></a>
   <ul class="navlinks">
     <li><a href="#about">About</a></li>
     <li><a href="#stack">Stack</a></li>
@@ -55,6 +55,13 @@
     <li><a href="#projects">Work</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
+  <div class="nav-right">
+    <div class="hud-clock-inline"><span class="dot"></span><span id="clock">--:--:-- LKT</span></div>
+    <button class="theme-toggle" id="themeToggle" data-cursor="THEME" aria-label="Switch between dark and light theme" title="Switch theme">
+      <svg class="icon-moon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/></svg>
+    </button>
+  </div>
 </nav>
 
 <div class="wrap">
@@ -221,7 +228,7 @@
     <div class="deck-nav">DRAG OR SCROLL <span>→</span></div>
   </div>
 
-  <div class="deck-scroll reveal" id="deck">
+  <div class="deck-scroll reveal" id="deck" data-cursor="DRAG">
     <div class="p-card">
       <div class="p-top"><span class="p-idx">01 / 08</span><span class="p-star">★ 5</span></div>
       <div class="p-title">AnyDown</div>
@@ -295,8 +302,21 @@
   </div>
 
   <div class="stats-imgs reveal">
-    <img src="https://github-readme-stats-sigma-five.vercel.app/api?username=pasanhansaka&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0c0616&title_color=ff3fa8&icon_color=7c5cff&text_color=e2e8f0&ring_color=7c5cff&include_all_commits=true&count_private=true" alt="GitHub Stats"/>
-    <img src="https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=pasanhansaka&layout=compact&theme=tokyonight&hide_border=true&bg_color=0c0616&title_color=ff3fa8&text_color=e2e8f0&langs_count=8" alt="Top Languages"/>
+    <img id="ghStatsImg" src="https://github-readme-stats-sigma-five.vercel.app/api?username=pasanhansaka&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0c0616&title_color=ff3fa8&icon_color=7c5cff&text_color=e2e8f0&ring_color=7c5cff&include_all_commits=true&count_private=true" alt="GitHub Stats"/>
+    <img id="ghLangsImg" src="https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=pasanhansaka&layout=compact&theme=tokyonight&hide_border=true&bg_color=0c0616&title_color=ff3fa8&text_color=e2e8f0&langs_count=8" alt="Top Languages"/>
+  </div>
+
+  <div class="reveal" style="margin-top:20px;">
+    <img id="ghActivityImg" style="width:100%; border-radius:8px; border:1px solid var(--line);"
+      src="https://github-readme-activity-graph.vercel.app/graph?username=pasanhansaka&theme=tokyo-night&hide_border=true&bg_color=0c0616&color=ff3fa8&line=7c5cff&point=35f0c9&area=true&area_color=3f2591&custom_title=Contribution%20Activity"
+      alt="Contribution activity graph"/>
+  </div>
+
+  <div class="reveal" id="snakeWrap" style="margin-top:20px;">
+    <img id="snakeImg" style="width:100%; border-radius:8px; border:1px solid var(--line); display:block;"
+      src="https://raw.githubusercontent.com/pasanhansaka/pasanhansaka/output/github-snake-dark.svg"
+      alt="Snake eating GitHub contribution graph"
+      onerror="this.closest('div').innerHTML='&lt;div class=&quot;snake-fallback&quot;&gt;Snake animation not found yet — make sure the snk GitHub Action has run at least once on &lt;b&gt;pasanhansaka/pasanhansaka&lt;/b&gt;.&lt;/div&gt;'"/>
   </div>
 </section>
 
