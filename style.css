@@ -422,118 +422,249 @@ h2.head{
 
 /* Contact Form Wrap */
 .contact-form-wrap {
-  width: min(580px, 100%);
+  width: min(600px, 100%);
   margin: 40px auto 30px;
   background: var(--ink);
   border: 1px solid var(--line);
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 20px 50px -25px rgba(124, 92, 255, 0.15);
-  text-align: left;
-  transition: border-color 0.3s, box-shadow 0.3s, background-color 0.5s ease;
+  padding: 32px 30px;
+  border-radius: 4px;
+  box-shadow: 0 25px 60px -20px rgba(0,0,0,0.6);
+  position: relative;
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 .contact-form-wrap:hover {
   border-color: var(--line-bright);
-  box-shadow: 0 20px 50px -25px rgba(124, 92, 255, 0.25);
+  box-shadow: 0 25px 60px -20px rgba(124, 92, 255, 0.2);
 }
-.form-group {
-  position: relative;
-  margin-bottom: 32px;
+.console-deck-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px;
+  margin-bottom: 12px;
 }
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: 14px 16px;
-  background: rgba(12, 6, 22, 0.4);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  color: var(--text);
-  font-family: var(--font-body);
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+.console-dots {
+  display: flex;
+  gap: 6px;
 }
-[data-theme="light"] .form-group input,
-[data-theme="light"] .form-group textarea {
-  background: rgba(239, 234, 249, 0.3);
+.console-dots .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
 }
-.form-group textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-/* Floating labels */
-.form-group label {
-  position: absolute;
-  left: 16px;
-  top: 14px;
-  color: var(--muted);
+.console-dots .dot.red { background: #ff5f56; }
+.console-dots .dot.yellow { background: #ffbd2e; }
+.console-dots .dot.green { background: #27c93f; }
+.console-title {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
+  color: var(--muted);
   letter-spacing: 1px;
-  pointer-events: none;
-  transition: transform 0.25s ease, font-size 0.25s ease, color 0.25s ease, background-color 0.25s ease;
-  transform-origin: left top;
 }
-/* Label floating state */
-.form-group input:focus ~ label,
-.form-group input:not(:placeholder-shown) ~ label,
-.form-group textarea:focus ~ label,
-.form-group textarea:not(:placeholder-shown) ~ label {
-  transform: translateY(-24px) scale(0.85);
+.console-status {
+  font-family: var(--font-mono);
+  font-size: 10px;
   color: var(--cyan);
-  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
 }
-/* Focus glow */
-.form-group input:focus,
-.form-group textarea:focus {
-  border-color: var(--cyan);
-  box-shadow: 0 0 12px rgba(53, 240, 201, 0.15);
-}
-/* Focus bottom border bar scan effect */
-.form-group .focus-border {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 0;
-  height: 2px;
+.console-status .status-pulse {
+  width: 6px; height: 6px;
   background: var(--cyan);
-  transition: width 0.3s ease, left 0.3s ease;
-  pointer-events: none;
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--cyan);
+  animation: pulse 1.5s infinite;
 }
-.form-group input:focus ~ .focus-border,
-.form-group textarea:focus ~ .focus-border {
-  width: 100%;
-  left: 0;
-}
-/* Invalid validation styles */
-.form-group.invalid input,
-.form-group.invalid textarea {
-  border-color: var(--magenta) !important;
-  box-shadow: 0 0 12px rgba(255, 63, 168, 0.2) !important;
-}
-.form-group.invalid label {
-  color: var(--magenta) !important;
-}
-.form-group.invalid .focus-border {
-  background: var(--magenta) !important;
+.console-hud-bar {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--muted-dim);
+  border-bottom: 1px solid rgba(124, 92, 255, 0.15);
+  padding-bottom: 10px;
+  margin-bottom: 24px;
+  letter-spacing: 1px;
 }
 
-/* Submit Button Custom Styling */
-.btn-submit {
-  width: 100%;
-  justify-content: center;
-  border-radius: 4px;
-  cursor: pointer;
-  padding: 16px;
-  font-size: 12.5px;
+.form-group-cyber {
+  margin-bottom: 24px;
+  text-align: left;
 }
-.btn-submit .fill {
-  border-radius: 4px;
+.field-meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  margin-bottom: 8px;
+  letter-spacing: 1.5px;
 }
-.btn-submit:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.field-meta .field-num {
+  color: var(--magenta);
+  font-weight: 600;
+}
+.field-meta .field-tag {
+  color: var(--muted);
+}
+.input-cyber-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(12, 6, 22, 0.45);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 0 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+[data-theme="light"] .input-cyber-wrapper {
+  background: rgba(239, 234, 249, 0.3);
+}
+.input-cyber-wrapper .input-caret {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--cyan);
+  margin-right: 10px;
   pointer-events: none;
+}
+.input-cyber-wrapper input,
+.input-cyber-wrapper textarea {
+  flex-grow: 1;
+  background: transparent !important;
+  border: none !important;
+  padding: 14px 0 !important;
+  color: var(--text);
+  font-family: var(--font-mono) !important;
+  font-size: 13px;
+  outline: none;
+  box-shadow: none !important;
+}
+.input-cyber-wrapper textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+/* Brackets Focus effect */
+.cyber-brackets {
+  position: absolute;
+  inset: -1px;
+  border: 1px solid transparent;
+  pointer-events: none;
+  transition: inset 0.25s ease;
+}
+.input-cyber-wrapper input:focus ~ .cyber-brackets,
+.input-cyber-wrapper textarea:focus ~ .cyber-brackets {
+  border-color: var(--cyan);
+  inset: -4px;
+  box-shadow: 0 0 10px rgba(53, 240, 201, 0.2);
+}
+.input-cyber-wrapper:focus-within {
+  border-color: var(--cyan);
+}
+
+/* Validation error styles */
+.form-group-cyber.invalid .input-cyber-wrapper {
+  border-color: var(--magenta) !important;
+}
+.form-group-cyber.invalid .input-caret {
+  color: var(--magenta) !important;
+  animation: flashErrorCaret 1s steps(2, start) infinite;
+}
+.form-group-cyber.invalid .field-num {
+  color: var(--magenta) !important;
+}
+.form-group-cyber.invalid input:focus ~ .cyber-brackets,
+.form-group-cyber.invalid textarea:focus ~ .cyber-brackets {
+  border-color: var(--magenta) !important;
+  box-shadow: 0 0 10px rgba(255, 63, 168, 0.25) !important;
+}
+@keyframes flashErrorCaret {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Console Log Box */
+.console-log-box {
+  background: #06020a;
+  border: 1px solid var(--line-bright);
+  border-left: 3px solid var(--cyan);
+  border-radius: 2px;
+  padding: 14px 16px;
+  margin-bottom: 24px;
+  text-align: left;
+  max-height: 140px;
+  overflow-y: auto;
+}
+[data-theme="light"] .console-log-box {
+  background: #f6f4fb;
+}
+.console-log-box::-webkit-scrollbar {
+  width: 4px;
+}
+.console-log-box::-webkit-scrollbar-thumb {
+  background: var(--line-bright);
+}
+.log-line {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.log-line.system {
+  color: var(--cyan);
+}
+.log-line.error {
+  color: var(--magenta);
+  font-weight: 600;
+}
+.log-line.success {
+  color: #27c93f;
+  font-weight: 600;
+  text-shadow: 0 0 6px rgba(39, 201, 63, 0.3);
+}
+
+/* Futuristic Submit Button */
+.cyber-submit-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--line-bright);
+  border-radius: 2px;
+  color: var(--text);
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, color 0.3s;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+.cyber-submit-btn .btn-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, var(--cyan), var(--violet), var(--magenta));
+  opacity: 0;
+  z-index: 1;
+  transition: opacity 0.4s ease;
+}
+.cyber-submit-btn:hover {
+  border-color: transparent;
+  color: var(--void);
+}
+.cyber-submit-btn:hover .btn-glow {
+  opacity: 1;
+}
+.cyber-submit-btn .btn-label {
+  position: relative;
+  z-index: 2;
+}
+.cyber-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Fallback direct link */
@@ -846,20 +977,20 @@ body::before {
 }
 .profile-avatar-wrap {
   position: relative;
-  width: 340px;
-  height: 340px;
+  width: 380px;
+  height: 380px;
   border-radius: 50%;
-  padding: 4.5px;
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
   box-shadow: 0 0 35px rgba(124, 92, 255, 0.25);
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-  overflow: hidden;
+  overflow: visible;
 }
 .profile-avatar-wrap:hover {
-  transform: scale(1.04) rotate(2deg);
+  transform: scale(1.03) rotate(1deg);
   box-shadow: 0 0 45px rgba(255, 63, 168, 0.4);
 }
 .profile-avatar-wrap.reveal {
@@ -872,6 +1003,33 @@ body::before {
   opacity: 1;
   transform: translateY(0) scale(1);
 }
+/* Hologram HUD reticle rings */
+.avatar-hud-ring {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.avatar-hud-ring.ring-outer {
+  inset: -16px;
+  border: 1px dashed rgba(53, 240, 201, 0.5);
+  box-shadow: 0 0 15px rgba(53, 240, 201, 0.15);
+  animation: rotateOuterHUD 25s linear infinite;
+}
+.avatar-hud-ring.ring-inner {
+  inset: -7px;
+  border: 1.5px dotted rgba(255, 63, 168, 0.6);
+  animation: rotateInnerHUD 15s linear infinite reverse;
+}
+.profile-avatar-wrap:hover .avatar-hud-ring.ring-outer {
+  border-color: rgba(53, 240, 201, 0.8);
+  box-shadow: 0 0 25px rgba(53, 240, 201, 0.3);
+}
+.profile-avatar-wrap:hover .avatar-hud-ring.ring-inner {
+  border-color: rgba(255, 63, 168, 0.85);
+}
+
 .profile-avatar-wrap::before {
   content: '';
   position: absolute;
@@ -931,6 +1089,14 @@ body::before {
   opacity: 0.85;
   animation: scanSweepCircular 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
+@keyframes rotateOuterHUD {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes rotateInnerHUD {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 @keyframes scanSweepCircular {
   0% { top: -10%; }
   50% { top: 110%; }
@@ -965,8 +1131,8 @@ body::before {
     order: -1;
     margin-left: auto;
     margin-right: auto;
-    width: 180px;
-    height: 180px;
+    width: 220px;
+    height: 220px;
   }
 }
 

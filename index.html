@@ -131,6 +131,8 @@
     </div>
   </div>
   <div class="profile-avatar-wrap reveal" data-cursor="ME">
+    <div class="avatar-hud-ring ring-outer"></div>
+    <div class="avatar-hud-ring ring-inner"></div>
     <div class="profile-avatar-inner">
       <img src="assets/images/pasan.jpg" alt="Pasan Hansaka" />
     </div>
@@ -382,33 +384,74 @@
     <p>Open to freelance work, collaborations, and interesting problems. Based in Kalutara, replying from wherever there's wifi.</p>
     
     <div class="contact-form-wrap reveal">
+      <!-- Console Deck Header -->
+      <div class="console-deck-header">
+        <div class="console-dots">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+        </div>
+        <div class="console-title">pasan.sys // COM_INTERFACE_v2.0</div>
+        <div class="console-status"><span class="status-pulse"></span> ONLINE</div>
+      </div>
+      
+      <div class="console-hud-bar">
+        <span>ROUTE: SECURE/SSL</span>
+        <span>PAYLOAD: USER_INQUIRY</span>
+        <span>GATEWAY: FORMSUBMIT_AJAX</span>
+      </div>
+
       <form id="contactForm" novalidate>
-        <!-- Web3Forms API Configuration -->
-        <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
-        <input type="hidden" name="subject" value="New Portfolio Inquiry from pasan.sys">
-        <input type="checkbox" name="botcheck" class="hidden-honeypot" style="display: none;">
+        <!-- Formsubmit.co AJAX Endpoint Configuration -->
+        <input type="hidden" name="_subject" value="New Portfolio Inquiry from pasan.sys">
+        <input type="text" name="_honey" style="display:none">
+        <input type="hidden" name="_captcha" value="false">
 
-        <div class="form-group">
-          <input type="text" id="name" name="name" required placeholder=" " autocomplete="name">
-          <label for="name">Your Name</label>
-          <span class="focus-border"></span>
+        <div class="form-group-cyber">
+          <div class="field-meta">
+            <span class="field-num">[FLD_01]</span>
+            <span class="field-tag">IDENTIFIER</span>
+          </div>
+          <div class="input-cyber-wrapper">
+            <span class="input-caret">></span>
+            <input type="text" id="name" name="name" required placeholder="ENTER SENDER IDENTIFIER..." autocomplete="name">
+            <span class="cyber-brackets"></span>
+          </div>
         </div>
 
-        <div class="form-group">
-          <input type="email" id="email" name="email" required placeholder=" " autocomplete="email">
-          <label for="email">Email Address</label>
-          <span class="focus-border"></span>
+        <div class="form-group-cyber">
+          <div class="field-meta">
+            <span class="field-num">[FLD_02]</span>
+            <span class="field-tag">RETURN_ROUTE</span>
+          </div>
+          <div class="input-cyber-wrapper">
+            <span class="input-caret">></span>
+            <input type="email" id="email" name="email" required placeholder="ENTER EMAIL ADDRESS..." autocomplete="email">
+            <span class="cyber-brackets"></span>
+          </div>
         </div>
 
-        <div class="form-group">
-          <textarea id="message" name="message" required placeholder=" " rows="5"></textarea>
-          <label for="message">Your Message</label>
-          <span class="focus-border"></span>
+        <div class="form-group-cyber">
+          <div class="field-meta">
+            <span class="field-num">[FLD_03]</span>
+            <span class="field-tag">MESSAGE_BODY</span>
+          </div>
+          <div class="input-cyber-wrapper">
+            <span class="input-caret">></span>
+            <textarea id="message" name="message" required placeholder="ENTER MESSAGE CONTENT..." rows="4"></textarea>
+            <span class="cyber-brackets"></span>
+          </div>
         </div>
 
-        <button type="submit" class="magnetic-btn btn-submit" id="submitBtn" data-cursor="SEND">
-          <span class="fill"></span>
-          <span class="btn-text">Transmit Inquiry →</span>
+        <!-- Real-time Console Log Terminal -->
+        <div class="console-log-box" id="formConsoleLogs" style="display: none;">
+          <div class="log-lines" id="formLogLines"></div>
+        </div>
+
+        <button type="submit" class="cyber-submit-btn" id="submitBtn" data-cursor="TRANSMIT">
+          <span class="btn-scanlines"></span>
+          <span class="btn-glow"></span>
+          <span class="btn-label">[TRANSMIT INQUIRY PACKET]</span>
         </button>
       </form>
     </div>

@@ -1094,6 +1094,28 @@ function showToast(message, type = 'success') {
 
 /* ---------- CONTACT FORM AJAX SUBMISSION & VALIDATION ---------- */
 const ContactForm = (function contactFormModule() {
+  async function printLogs(logsArray) {
+    const logsBox = document.getElementById('formConsoleLogs');
+    const logLines = document.getElementById('formLogLines');
+    if (!logsBox || !logLines) return;
+
+    logsBox.style.display = 'block';
+    logLines.innerHTML = '';
+
+    for (const line of logsArray) {
+      const lineEl = document.createElement('div');
+      lineEl.className = `log-line ${line.type || ''}`;
+      lineEl.textContent = `> ${line.text}`;
+      logLines.appendChild(lineEl);
+      
+      // Auto scroll to bottom
+      logsBox.scrollTop = logsBox.scrollHeight;
+      
+      // Short delay to simulate real computations
+      await new Promise(resolve => setTimeout(resolve, line.delay || 150));
+    }
+  }
+
   function init() {
     const form = document.getElementById('contactForm');
     if (!form) return;
@@ -1102,13 +1124,18 @@ const ContactForm = (function contactFormModule() {
     const emailInput = document.getElementById('email');
     const msgInput = document.getElementById('message');
     const submitBtn = document.getElementById('submitBtn');
-    const btnText = submitBtn ? submitBtn.querySelector('.btn-text') : null;
 
-    // Reset validation errors on input change
+    // Reset validation errors on input change and play typing/click sounds
     [nameInput, emailInput, msgInput].forEach(input => {
       if (input) {
+        input.addEventListener('focus', () => {
+          SoundManager.play('click');
+        });
+        input.addEventListener('keypress', () => {
+          SoundManager.play('type');
+        });
         input.addEventListener('input', () => {
-          const group = input.closest('.form-group');
+          const group = input.closest('.form-group-cyber');
           if (group) group.classList.remove('invalid');
         });
       }
@@ -1118,70 +1145,107 @@ const ContactForm = (function contactFormModule() {
       e.preventDefault();
 
       let hasError = false;
+      const logs = [];
 
       // Reset previous error outlines
-      document.querySelectorAll('.form-group').forEach(el => el.classList.remove('invalid'));
+      document.querySelectorAll('.form-group-cyber').forEach(el => el.classList.remove('invalid'));
+
+      logs.push({ text: 'SYSTEM: INITIATING UPLINK PROTOCOL...', type: 'system', delay: 100 });
+      logs.push({ text: 'SYSTEM: RUNNING LOCAL DATA INTEGRITY CHECKS...', type: 'system', delay: 150 });
 
       // Validate Name
       if (!nameInput || !nameInput.value.trim()) {
         hasError = true;
-        if (nameInput) nameInput.closest('.form-group').classList.add('invalid');
-        showToast('Your name is required for identification.', 'error');
+        if (nameInput) nameInput.closest('.form-group-cyber').classList.add('invalid');
+        logs.push({ text: 'ERR: IDENTIFIER (FLD_01) IS EMPTY OR CORRUPTED.', type: 'error', delay: 100 });
+      } else {
+        logs.push({ text: `FLD_01 (IDENTIFIER) = [${nameInput.value.trim().substring(0, 16)}] ... OK`, type: 'success', delay: 100 });
       }
 
       // Validate Email
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailInput || !emailInput.value.trim()) {
         hasError = true;
-        if (emailInput) emailInput.closest('.form-group').classList.add('invalid');
-        showToast('Email address is required for return routing.', 'error');
+        if (emailInput) emailInput.closest('.form-group-cyber').classList.add('invalid');
+        logs.push({ text: 'ERR: RETURN_ROUTE (FLD_02) IS REQUIRED.', type: 'error', delay: 100 });
       } else if (!emailRegex.test(emailInput.value.trim())) {
         hasError = true;
-        emailInput.closest('.form-group').classList.add('invalid');
-        showToast('Invalid email format. Please verify the address.', 'error');
+        emailInput.closest('.form-group-cyber').classList.add('invalid');
+        logs.push({ text: 'ERR: INVALID EMAIL ROUTING SYNTAX (FLD_02).', type: 'error', delay: 100 });
+      } else {
+        logs.push({ text: `FLD_02 (RETURN_ROUTE) = [${emailInput.value.trim().substring(0, 20)}...] ... OK`, type: 'success', delay: 100 });
       }
 
       // Validate Message
       if (!msgInput || !msgInput.value.trim()) {
         hasError = true;
-        if (msgInput) msgInput.closest('.form-group').classList.add('invalid');
-        showToast('Inquiry payload cannot be empty.', 'error');
+        if (msgInput) msgInput.closest('.form-group-cyber').classList.add('invalid');
+        logs.push({ text: 'ERR: MESSAGE_BODY (FLD_03) CONTAINS NO PAYLOAD DATA.', type: 'error', delay: 100 });
+      } else {
+        logs.push({ text: `FLD_03 (PAYLOAD) = [${msgInput.value.trim().length} BYTES] ... OK`, type: 'success', delay: 100 });
       }
 
-      // Play failure sound if validation fails
       if (hasError) {
+        logs.push({ text: 'ERR: TRANSACTION ABORTED. RESOLVE VALIDATION CONSTRAINTS.', type: 'error', delay: 100 });
         SoundManager.play('error');
+        await printLogs(logs);
+        showToast('Form validation failed. Check terminal readouts.', 'error');
         return;
       }
 
-      // Prepare form submit state
-      if (submitBtn) submitBtn.disabled = true;
-      if (btnText) btnText.textContent = 'Transmitting Data...';
+      // Prepare submission logs
+      logs.push({ text: 'SYSTEM: ESTABLISHING SECURE GATEWAY TUNNEL...', type: 'system', delay: 200 });
+      logs.push({ text: 'SYSTEM: ENCRYPTING DATA WITH SSL/AES-256...', type: 'system', delay: 250 });
+      logs.push({ text: 'SYSTEM: DISPATCHING TRANSMISSION TO FORMSUBMIT_GATEWAY...', type: 'system', delay: 300 });
 
+      // Disable inputs and buttons
+      if (submitBtn) submitBtn.disabled = true;
+      [nameInput, emailInput, msgInput].forEach(inp => { if (inp) inp.disabled = true; });
+
+      // Start printing logs
+      const logPromise = printLogs(logs);
+      
       const formData = new FormData(form);
+      const payload = {};
+      formData.forEach((value, key) => { payload[key] = value; });
 
       try {
-        const response = await fetch('https://api.web3forms.com/submit', {
+        const responsePromise = fetch('https://formsubmit.co/ajax/pasanhansaka31@gmail.com', {
           method: 'POST',
-          body: formData
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload)
         });
 
+        const [response, _] = await Promise.all([responsePromise, logPromise]);
         const json = await response.json();
 
+        const endLogs = [];
         if (response.status === 200 && json.success) {
           SoundManager.play('success');
-          showToast('Inquiry transmission completed successfully.', 'success');
+          endLogs.push({ text: 'SYSTEM: UPLINK RECEIVED AND ACKNOWLEDGED.', type: 'success', delay: 150 });
+          endLogs.push({ text: `SYSTEM: TX_HASH = [${Math.random().toString(16).substring(2, 10).toUpperCase()}_${Date.now().toString().substring(8)}]`, type: 'success', delay: 150 });
+          endLogs.push({ text: 'SYSTEM: DISCONNECTING. UPLINK SECURED.', type: 'success', delay: 100 });
+          await printLogs(endLogs);
+          
+          showToast('Inquiry packet transmitted successfully.', 'success');
           form.reset();
         } else {
           SoundManager.play('error');
+          endLogs.push({ text: `ERR: SERVER REJECTED PAYLOAD. MSG: [${json.message || 'UNKNOWN'}]`, type: 'error', delay: 200 });
+          await printLogs(endLogs);
           showToast(json.message || 'Server rejected transmission.', 'error');
         }
       } catch (err) {
         SoundManager.play('error');
+        const errLogs = [{ text: 'ERR: NETWORK DISRUPTION. GATEWAY UNREACHABLE.', type: 'error', delay: 200 }];
+        await printLogs(errLogs);
         showToast('Connection interrupted. Please verify connection and retry.', 'error');
       } finally {
         if (submitBtn) submitBtn.disabled = false;
-        if (btnText) btnText.textContent = 'Transmit Inquiry →';
+        [nameInput, emailInput, msgInput].forEach(inp => { if (inp) inp.disabled = false; });
       }
     });
   }
