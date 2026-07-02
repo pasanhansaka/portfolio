@@ -1,5 +1,3 @@
-# PASAN HANSAKA
-
 <div align="center">
 
 ```
@@ -11,7 +9,7 @@
 ╚═╝     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝    ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝
 ```
 
-### pasan.sys // CYBERPUNK PORTFOLIO CONSOLE v2.0
+### pasan.sys // CYBERPUNK PORTFOLIO CONSOLE v1.0.0
 
 <table>
   <tr>
@@ -117,10 +115,6 @@ Open to freelance work, collaborations, or discussing software systems and DB de
 
 <div align="center">
 
-```
-pasan.sys // TERMINAL DISCONNECT... [SUCCESS]
-> BYE_
-```
 
 <sub>Designed & built by Pasan Hansaka. Kalutara, Sri Lanka.</sub>
 
