@@ -312,10 +312,15 @@ if (!REDUCED && window.matchMedia('(min-width:861px)').matches) {
   if (navigator.getBattery) {
     navigator.getBattery().then(battery => {
       function updateBattery() {
-        if (battEl) battEl.textContent = Math.round(battery.level * 100) + '%';
+        if (battEl) {
+          const pct = Math.round(battery.level * 100);
+          const statusSuffix = battery.charging ? ' ⚡' : '';
+          battEl.textContent = pct + '%' + statusSuffix;
+        }
       }
       updateBattery();
       battery.addEventListener('levelchange', updateBattery);
+      battery.addEventListener('chargingchange', updateBattery);
     }).catch(() => {
       if (battEl) battEl.textContent = '100% (AC)';
     });
@@ -335,8 +340,10 @@ function tickClock() {
 tickClock();
 setInterval(tickClock, 1000);
 
-/* ---------- SCROLL PROGRESS BAR & NAV TRANSITION ---------- */
-window.addEventListener('scroll', () => {
+/* ---------- THROTTLED SCROLL PROGRESS & NAV TRANSITION & TIMELINE FILL ---------- */
+let scrollTicker = false;
+function handleScroll() {
+  // 1. Scroll Progress Bar & Nav Transition
   const h = document.documentElement;
   const progressPercent = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
   const bar = document.getElementById('scroll-progress');
@@ -350,7 +357,30 @@ window.addEventListener('scroll', () => {
       nav.classList.remove('nav-scrolled');
     }
   }
-});
+
+  // 2. Timeline Progress Fill
+  const tl = document.querySelector('.timeline');
+  const tlBar = document.getElementById('tlProgress');
+  if (tl && tlBar) {
+    const r = tl.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const total = r.height;
+    const visible = Math.min(Math.max(vh * 0.7 - r.top, 0), total);
+    tlBar.style.height = (visible / total * 100) + '%';
+  }
+
+  scrollTicker = false;
+}
+
+window.addEventListener('scroll', () => {
+  if (!scrollTicker) {
+    requestAnimationFrame(handleScroll);
+    scrollTicker = true;
+  }
+}, { passive: true });
+
+// Run once initially to align everything on load
+handleScroll();
 
 /* ---------- TEXT DECRYPTION EFFECT ---------- */
 const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*_-+=01';
@@ -382,10 +412,16 @@ const revealObserver = new IntersectionObserver((entries) => {
     if (entry.isIntersecting) {
       entry.target.classList.add('in');
     } else {
-      entry.target.classList.remove('in');
+      // Only remove the 'in' class if the element is truly outside the viewport area.
+      // This prevents elements inside the viewport from being incorrectly hidden on initial load.
+      const rect = entry.boundingClientRect;
+      const vh = window.innerHeight || document.documentElement.clientHeight || 800;
+      if (rect.top > vh || rect.bottom < 0) {
+        entry.target.classList.remove('in');
+      }
     }
   });
-}, { threshold: 0.01, rootMargin: "0px 0px -50px 0px" });
+}, { threshold: 0.01, rootMargin: "100px 0px 100px 0px" });
 
 function startPageAnims() {
   // Safe fallback if IntersectionObserver is not supported
@@ -542,7 +578,11 @@ const fxController = (function fx() {
 
   // Setup
   resize();
-  window.addEventListener('resize', resize);
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(resize, 150);
+  });
   setTheme(document.documentElement.getAttribute('data-theme') || 'dark');
 
   // Input listeners
@@ -775,17 +815,7 @@ document.querySelectorAll('.p-card').forEach(card => {
   });
 });
 
-/* ---------- TIMELINE PROGRESS FILL ---------- */
-window.addEventListener('scroll', () => {
-  const tl = document.querySelector('.timeline');
-  const bar = document.getElementById('tlProgress');
-  if (!tl || !bar) return;
-  const r = tl.getBoundingClientRect();
-  const vh = window.innerHeight;
-  const total = r.height;
-  const visible = Math.min(Math.max(vh * 0.7 - r.top, 0), total);
-  bar.style.height = (visible / total * 100) + '%';
-});
+/* ---------- TIMELINE PROGRESS FILL (Handled by global throttled scroll listener) ---------- */
 
 /* ---------- RETRO-CLI VIRTUAL SHELL (Terminal Module) ---------- */
 const TerminalConsole = (function shell() {
@@ -973,6 +1003,7 @@ const TerminalConsole = (function shell() {
     // Toggle terminal using backtick (`) key
     window.addEventListener('keydown', e => {
       if (e.key === '`' || e.key === 'Backquote') {
+        if (document.activeElement === input) return;
         e.preventDefault();
         toggle();
       }
