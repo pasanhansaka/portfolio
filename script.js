@@ -166,12 +166,37 @@ const ThemeManager = (function theme() {
     if (window.fxController && typeof window.fxController.setTheme === 'function') {
       window.fxController.setTheme(themeName);
     }
-    // GitHub Snake SVG
+    
+    // GitHub stats images and graph
+    const ghStatsImg = document.getElementById('ghStatsImg');
+    const ghLangsImg = document.getElementById('ghLangsImg');
+    const ghActivityImg = document.getElementById('ghActivityImg');
     const snakeImg = document.getElementById('snakeImg');
-    if (snakeImg) {
-      if (themeName === 'light') {
+    
+    if (themeName === 'light') {
+      if (ghStatsImg) {
+        ghStatsImg.src = "https://github-readme-stats-sigma-five.vercel.app/api?username=pasanhansaka&show_icons=true&theme=default&hide_border=true&bg_color=f6f4fb&title_color=6a3ff2&icon_color=6a3ff2&text_color=1e1630&ring_color=6a3ff2&include_all_commits=true&count_private=true";
+      }
+      if (ghLangsImg) {
+        ghLangsImg.src = "https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=pasanhansaka&layout=compact&theme=default&hide_border=true&bg_color=f6f4fb&title_color=6a3ff2&text_color=1e1630&langs_count=8";
+      }
+      if (ghActivityImg) {
+        ghActivityImg.src = "https://github-readme-activity-graph.vercel.app/graph?username=pasanhansaka&theme=react-light&hide_border=true&bg_color=f6f4fb&color=d21690&line=6a3ff2&point=0b8f7c&area=true&area_color=c9b8ff&custom_title=Contribution%20Activity";
+      }
+      if (snakeImg) {
         snakeImg.src = 'https://raw.githubusercontent.com/pasanhansaka/portfolio/output/github-snake.svg';
-      } else {
+      }
+    } else {
+      if (ghStatsImg) {
+        ghStatsImg.src = "https://github-readme-stats-sigma-five.vercel.app/api?username=pasanhansaka&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0c0616&title_color=ff3fa8&icon_color=7c5cff&text_color=e2e8f0&ring_color=7c5cff&include_all_commits=true&count_private=true";
+      }
+      if (ghLangsImg) {
+        ghLangsImg.src = "https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=pasanhansaka&layout=compact&theme=tokyonight&hide_border=true&bg_color=0c0616&title_color=ff3fa8&text_color=e2e8f0&langs_count=8";
+      }
+      if (ghActivityImg) {
+        ghActivityImg.src = "https://github-readme-activity-graph.vercel.app/graph?username=pasanhansaka&theme=tokyo-night&hide_border=true&bg_color=0c0616&color=ff3fa8&line=7c5cff&point=35f0c9&area=true&area_color=3f2591&custom_title=Contribution%20Activity";
+      }
+      if (snakeImg) {
         snakeImg.src = 'https://raw.githubusercontent.com/pasanhansaka/portfolio/output/github-snake-dark.svg';
       }
     }
@@ -1111,13 +1136,21 @@ function showToast(message, type = 'success') {
 
 /* ---------- CONTACT FORM AJAX SUBMISSION & VALIDATION ---------- */
 const ContactForm = (function contactFormModule() {
+  let logTimeout = null;
+
   async function printLogs(logsArray) {
     const logsBox = document.getElementById('formConsoleLogs');
     const logLines = document.getElementById('formLogLines');
     if (!logsBox || !logLines) return;
 
+    if (logTimeout) clearTimeout(logTimeout);
+    logsBox.style.transition = 'none';
+    logsBox.style.opacity = '1';
     logsBox.style.display = 'block';
-    logLines.innerHTML = '';
+
+    if (logsArray.length > 0 && logsArray[0].text.includes('INITIATING UPLINK PROTOCOL')) {
+      logLines.innerHTML = '';
+    }
 
     for (const line of logsArray) {
       const lineEl = document.createElement('div');
@@ -1131,6 +1164,23 @@ const ContactForm = (function contactFormModule() {
       // Short delay to simulate real computations
       await new Promise(resolve => setTimeout(resolve, line.delay || 150));
     }
+  }
+
+  function startLogsClearTimer() {
+    if (logTimeout) clearTimeout(logTimeout);
+    logTimeout = setTimeout(() => {
+      const logsBox = document.getElementById('formConsoleLogs');
+      if (logsBox) {
+        logsBox.style.transition = 'opacity 0.5s ease';
+        logsBox.style.opacity = '0';
+        setTimeout(() => {
+          logsBox.style.display = 'none';
+          logsBox.style.opacity = '1';
+          const logLines = document.getElementById('formLogLines');
+          if (logLines) logLines.innerHTML = '';
+        }, 500);
+      }
+    }, 30000);
   }
 
   function init() {
@@ -1174,9 +1224,9 @@ const ContactForm = (function contactFormModule() {
       if (!nameInput || !nameInput.value.trim()) {
         hasError = true;
         if (nameInput) nameInput.closest('.form-group-cyber').classList.add('invalid');
-        logs.push({ text: 'ERR: IDENTIFIER (FLD_01) IS EMPTY OR CORRUPTED.', type: 'error', delay: 100 });
+        logs.push({ text: 'ERR: IDENTIFIER (01) IS EMPTY OR CORRUPTED.', type: 'error', delay: 100 });
       } else {
-        logs.push({ text: `FLD_01 (IDENTIFIER) = [${nameInput.value.trim().substring(0, 16)}] ... OK`, type: 'success', delay: 100 });
+        logs.push({ text: `01 (IDENTIFIER) = [${nameInput.value.trim().substring(0, 16)}] ... OK`, type: 'success', delay: 100 });
       }
 
       // Validate Email
@@ -1184,22 +1234,22 @@ const ContactForm = (function contactFormModule() {
       if (!emailInput || !emailInput.value.trim()) {
         hasError = true;
         if (emailInput) emailInput.closest('.form-group-cyber').classList.add('invalid');
-        logs.push({ text: 'ERR: RETURN_ROUTE (FLD_02) IS REQUIRED.', type: 'error', delay: 100 });
+        logs.push({ text: 'ERR: RETURN_ROUTE (02) IS REQUIRED.', type: 'error', delay: 100 });
       } else if (!emailRegex.test(emailInput.value.trim())) {
         hasError = true;
         emailInput.closest('.form-group-cyber').classList.add('invalid');
-        logs.push({ text: 'ERR: INVALID EMAIL ROUTING SYNTAX (FLD_02).', type: 'error', delay: 100 });
+        logs.push({ text: 'ERR: INVALID EMAIL ROUTING SYNTAX (02).', type: 'error', delay: 100 });
       } else {
-        logs.push({ text: `FLD_02 (RETURN_ROUTE) = [${emailInput.value.trim().substring(0, 20)}...] ... OK`, type: 'success', delay: 100 });
+        logs.push({ text: `02 (RETURN_ROUTE) = [${emailInput.value.trim().substring(0, 20)}...] ... OK`, type: 'success', delay: 100 });
       }
 
       // Validate Message
       if (!msgInput || !msgInput.value.trim()) {
         hasError = true;
         if (msgInput) msgInput.closest('.form-group-cyber').classList.add('invalid');
-        logs.push({ text: 'ERR: MESSAGE_BODY (FLD_03) CONTAINS NO PAYLOAD DATA.', type: 'error', delay: 100 });
+        logs.push({ text: 'ERR: MESSAGE_BODY (03) CONTAINS NO PAYLOAD DATA.', type: 'error', delay: 100 });
       } else {
-        logs.push({ text: `FLD_03 (PAYLOAD) = [${msgInput.value.trim().length} BYTES] ... OK`, type: 'success', delay: 100 });
+        logs.push({ text: `03 (PAYLOAD) = [${msgInput.value.trim().length} BYTES] ... OK`, type: 'success', delay: 100 });
       }
 
       if (hasError) {
@@ -1207,13 +1257,14 @@ const ContactForm = (function contactFormModule() {
         SoundManager.play('error');
         await printLogs(logs);
         showToast('Form validation failed. Check terminal readouts.', 'error');
+        startLogsClearTimer();
         return;
       }
 
       // Prepare submission logs
       logs.push({ text: 'SYSTEM: ESTABLISHING SECURE GATEWAY TUNNEL...', type: 'system', delay: 200 });
       logs.push({ text: 'SYSTEM: ENCRYPTING DATA WITH SSL/AES-256...', type: 'system', delay: 250 });
-      logs.push({ text: 'SYSTEM: DISPATCHING TRANSMISSION TO FORMSUBMIT_GATEWAY...', type: 'system', delay: 300 });
+      logs.push({ text: 'SYSTEM: DISPATCHING TRANSMISSION TO SECURED GATEWAY...', type: 'system', delay: 300 });
 
       // Disable inputs and buttons
       if (submitBtn) submitBtn.disabled = true;
@@ -1227,7 +1278,7 @@ const ContactForm = (function contactFormModule() {
       formData.forEach((value, key) => { payload[key] = value; });
 
       try {
-        const responsePromise = fetch('https://formsubmit.co/ajax/pasanhansaka31@gmail.com', {
+        const responsePromise = fetch('https://formsubmit.co/ajax/44c8434e77d06754177b1fd1ab98cd6c', {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
@@ -1263,6 +1314,7 @@ const ContactForm = (function contactFormModule() {
       } finally {
         if (submitBtn) submitBtn.disabled = false;
         [nameInput, emailInput, msgInput].forEach(inp => { if (inp) inp.disabled = false; });
+        startLogsClearTimer();
       }
     });
   }
