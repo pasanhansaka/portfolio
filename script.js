@@ -1053,8 +1053,144 @@ const CVViewer = (function cvViewer() {
 })();
 window.openCVModal = CVViewer.open;
 window.closeCVModal = CVViewer.close;
+/* ---------- TOAST NOTIFICATION UTILITY ---------- */
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+
+  const iconSym = type === 'success' ? '✓' : '✕';
+  const titleText = type === 'success' ? 'SYS_OK :: TRANSMISSION SECURED' : 'SYS_ERR :: LINK FAILURE';
+
+  toast.innerHTML = `
+    <div class="toast-icon ${type}">${iconSym}</div>
+    <div class="toast-content">
+      <div class="toast-title">${titleText}</div>
+      <div class="toast-msg">${message}</div>
+    </div>
+  `;
+
+  container.appendChild(toast);
+
+  // Auto remove toast after 4s
+  const timeoutId = setTimeout(() => {
+    toast.classList.add('hiding');
+    toast.addEventListener('animationend', () => {
+      toast.remove();
+    });
+  }, 4000);
+
+  // Close toast on click
+  toast.addEventListener('click', () => {
+    clearTimeout(timeoutId);
+    toast.classList.add('hiding');
+    toast.addEventListener('animationend', () => {
+      toast.remove();
+    });
+  });
+}
+
+/* ---------- CONTACT FORM AJAX SUBMISSION & VALIDATION ---------- */
+const ContactForm = (function contactFormModule() {
+  function init() {
+    const form = document.getElementById('contactForm');
+    if (!form) return;
+
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const msgInput = document.getElementById('message');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = submitBtn ? submitBtn.querySelector('.btn-text') : null;
+
+    // Reset validation errors on input change
+    [nameInput, emailInput, msgInput].forEach(input => {
+      if (input) {
+        input.addEventListener('input', () => {
+          const group = input.closest('.form-group');
+          if (group) group.classList.remove('invalid');
+        });
+      }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      let hasError = false;
+
+      // Reset previous error outlines
+      document.querySelectorAll('.form-group').forEach(el => el.classList.remove('invalid'));
+
+      // Validate Name
+      if (!nameInput || !nameInput.value.trim()) {
+        hasError = true;
+        if (nameInput) nameInput.closest('.form-group').classList.add('invalid');
+        showToast('Your name is required for identification.', 'error');
+      }
+
+      // Validate Email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailInput || !emailInput.value.trim()) {
+        hasError = true;
+        if (emailInput) emailInput.closest('.form-group').classList.add('invalid');
+        showToast('Email address is required for return routing.', 'error');
+      } else if (!emailRegex.test(emailInput.value.trim())) {
+        hasError = true;
+        emailInput.closest('.form-group').classList.add('invalid');
+        showToast('Invalid email format. Please verify the address.', 'error');
+      }
+
+      // Validate Message
+      if (!msgInput || !msgInput.value.trim()) {
+        hasError = true;
+        if (msgInput) msgInput.closest('.form-group').classList.add('invalid');
+        showToast('Inquiry payload cannot be empty.', 'error');
+      }
+
+      // Play failure sound if validation fails
+      if (hasError) {
+        SoundManager.play('error');
+        return;
+      }
+
+      // Prepare form submit state
+      if (submitBtn) submitBtn.disabled = true;
+      if (btnText) btnText.textContent = 'Transmitting Data...';
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: formData
+        });
+
+        const json = await response.json();
+
+        if (response.status === 200 && json.success) {
+          SoundManager.play('success');
+          showToast('Inquiry transmission completed successfully.', 'success');
+          form.reset();
+        } else {
+          SoundManager.play('error');
+          showToast(json.message || 'Server rejected transmission.', 'error');
+        }
+      } catch (err) {
+        SoundManager.play('error');
+        showToast('Connection interrupted. Please verify connection and retry.', 'error');
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+        if (btnText) btnText.textContent = 'Transmit Inquiry →';
+      }
+    });
+  }
+
+  return { init };
+})();
 
 document.addEventListener('DOMContentLoaded', () => {
   TerminalConsole.init();
   CVViewer.init();
+  ContactForm.init();
 });

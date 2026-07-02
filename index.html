@@ -380,7 +380,41 @@
     <span class="eyebrow" style="justify-content:center;"><span class="idx">06</span> get in touch</span>
     <span class="decrypt" data-text="LET'S BUILD SOMETHING">LET'S BUILD SOMETHING</span>
     <p>Open to freelance work, collaborations, and interesting problems. Based in Kalutara, replying from wherever there's wifi.</p>
-    <a class="magnetic-btn" href="mailto:pasanhansaka31@gmail.com" data-cursor="EMAIL"><span class="fill"></span>pasanhansaka31@gmail.com</a>
+    
+    <div class="contact-form-wrap reveal">
+      <form id="contactForm" novalidate>
+        <!-- Web3Forms API Configuration -->
+        <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+        <input type="hidden" name="subject" value="New Portfolio Inquiry from pasan.sys">
+        <input type="checkbox" name="botcheck" class="hidden-honeypot" style="display: none;">
+
+        <div class="form-group">
+          <input type="text" id="name" name="name" required placeholder=" " autocomplete="name">
+          <label for="name">Your Name</label>
+          <span class="focus-border"></span>
+        </div>
+
+        <div class="form-group">
+          <input type="email" id="email" name="email" required placeholder=" " autocomplete="email">
+          <label for="email">Email Address</label>
+          <span class="focus-border"></span>
+        </div>
+
+        <div class="form-group">
+          <textarea id="message" name="message" required placeholder=" " rows="5"></textarea>
+          <label for="message">Your Message</label>
+          <span class="focus-border"></span>
+        </div>
+
+        <button type="submit" class="magnetic-btn btn-submit" id="submitBtn" data-cursor="SEND">
+          <span class="fill"></span>
+          <span class="btn-text">Transmit Inquiry →</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Secondary Fallback Link -->
+    <p class="fallback-link-p">// Or drop a direct line at <a href="mailto:pasanhansaka31@gmail.com" class="fallback-link">pasanhansaka31@gmail.com</a></p>
   </div>
 </section>
 
@@ -421,6 +455,9 @@
     </div>
   </div>
 </div>
+
+<!-- Toast Notifications Container -->
+<div id="toast-container" class="toast-container"></div>
 
 <script src="script.js"></script>
 </body>
