@@ -290,6 +290,10 @@ h2.head{
   scrollbar-width: thin;
   scrollbar-color: var(--line) transparent;
   padding-bottom: 8px;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .code-pre::-webkit-scrollbar {
   height: 4px;
@@ -305,6 +309,7 @@ h2.head{
   transition:background-color .5s ease, border-color .5s ease;
   min-width: 0;
   max-width: 100%;
+  overflow: hidden;
 }
 .code-card .dots{ display:flex; gap:6px; margin-bottom:20px; }
 .code-card .dots i{ width:9px; height:9px; border-radius:50%; display:block; }
