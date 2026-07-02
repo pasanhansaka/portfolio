@@ -303,6 +303,8 @@ h2.head{
   padding:30px 32px; font-family:var(--font-mono); font-size:13px; line-height:1.95;
   box-shadow:0 30px 70px -40px rgba(124,58,237,0.5); position:relative;
   transition:background-color .5s ease, border-color .5s ease;
+  min-width: 0;
+  max-width: 100%;
 }
 .code-card .dots{ display:flex; gap:6px; margin-bottom:20px; }
 .code-card .dots i{ width:9px; height:9px; border-radius:50%; display:block; }
