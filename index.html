@@ -11,6 +11,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <link rel="stylesheet" href="style.css"/>
+<link rel="icon" type="image/png" href="assets/images/logo.png" />
 </head>
 <body>
 
@@ -82,12 +83,13 @@
 </div>
 
 <nav>
-  <a href="#top" class="brand" data-cursor="TOP">PASAN.HANSAKA<span class="dot">_</span></a>
+  <a href="#top" class="brand" data-cursor="TOP"><img src="assets/images/logo.png" alt="Logo" class="brand-logo" />PASAN.HANSAKA<span class="dot">_</span></a>
   <ul class="navlinks">
     <li><a href="#about">About</a></li>
     <li><a href="#stack">Stack</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#projects">Work</a></li>
+    <li><a href="#resume" class="resume-trigger" data-cursor="RESUME">Resume</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><button class="terminal-trigger-btn" id="terminalTrigger" data-cursor="TERMINAL" title="Open Shell Terminal">[CLI_]</button></li>
   </ul>
@@ -118,6 +120,7 @@
   <p class="lead">I build <strong>enterprise-grade systems</strong> and interfaces that feel considered — currently engineering the <strong>dwesk Social CRM</strong> platform at Synapse Solutions, from Kalutara, Sri Lanka.</p>
   <div class="cta-row">
     <a class="btn btn-primary" href="#projects" data-cursor="VIEW">See the work →</a>
+    <button class="btn btn-ghost resume-trigger" data-cursor="RESUME">View Resume</button>
     <a class="btn btn-ghost" href="#contact" data-cursor="TALK">Start a project</a>
   </div>
   <div class="hero-meta">
@@ -163,6 +166,17 @@
 
 <span class="c1">// run it</span>
 <span class="c5">export default</span> pasan;</pre>
+    </div>
+
+    <!-- PROFILE IMAGE CARD -->
+    <div class="about-profile reveal">
+      <span class="profile-corner tl"></span>
+      <span class="profile-corner tr"></span>
+      <span class="profile-corner bl"></span>
+      <span class="profile-corner br"></span>
+      <div class="profile-frame">
+        <img src="assets/images/pasan.jpg" alt="Pasan Hansaka" />
+      </div>
     </div>
 
     <div class="about-side reveal">
@@ -382,6 +396,34 @@
   </div>
 </footer>
 
+</div>
+
+<!-- CV VIEWER OVERLAY -->
+<div id="cv-overlay" class="cv-hidden">
+  <div class="cv-container">
+    <div class="cv-header">
+      <span class="cv-title">⚡ PASAN.SYS — RESUME_VIEWER.EXE</span>
+      <div class="cv-controls">
+        <a href="assets/Pasan_Hansaka_CV.pdf" download="Pasan_Hansaka_CV.pdf" class="cv-download-btn" data-cursor="DOWNLOAD" title="Download PDF">
+          <svg viewBox="0 0 24 24" width="14" height="14" style="margin-right: 4px; fill: currentColor;"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+          <span>Download PDF</span>
+        </a>
+        <button id="cvClose" class="cv-close-btn" aria-label="Close viewer" data-cursor="CLOSE">✕</button>
+      </div>
+    </div>
+    <div class="cv-body">
+      <iframe src="assets/Pasan_Hansaka_CV.pdf#toolbar=0" class="cv-iframe" id="cvIframe" title="Pasan Hansaka Resume"></iframe>
+      
+      <!-- Fallback preview message in case PDF doesn't render -->
+      <div class="cv-fallback-message">
+        <p>Having trouble viewing the PDF inline?</p>
+        <div style="display: flex; gap: 10px;">
+          <a href="assets/Pasan_Hansaka_CV.pdf" target="_blank" class="btn btn-primary">Open PDF in New Tab</a>
+          <a href="assets/Pasan_Hansaka_CV.pdf" download="Pasan_Hansaka_CV.pdf" class="btn btn-ghost">Download Directly</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="script.js"></script>

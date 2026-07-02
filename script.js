@@ -195,60 +195,63 @@ if (!REDUCED && window.matchMedia('(min-width:861px)').matches) {
   const dot = document.getElementById('cdot');
   const ring = document.getElementById('cring');
   const label = document.getElementById('clabel');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  let cursorStarted = false;
-
-  dot.style.opacity = '0';
-  ring.style.opacity = '0';
-  dot.style.transition = 'opacity 0.3s ease';
-  ring.style.transition = 'opacity 0.3s ease, width 0.2s, height 0.2s, background 0.2s';
-
-  window.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
-    label.style.left = mx + 'px'; label.style.top = my + 'px';
-    document.documentElement.style.setProperty('--mx', mx + 'px');
-    document.documentElement.style.setProperty('--my', my + 'px');
-
-    if (!cursorStarted) {
-      cursorStarted = true;
-      dot.style.opacity = '1';
-      ring.style.opacity = '1';
-    }
-  });
-
-  function lerpCursor() {
-    rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
-    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-    requestAnimationFrame(lerpCursor);
-  }
-  lerpCursor();
-
-  // Attach hover events
-  function bindCursorEffects() {
-    document.querySelectorAll('a, button, .chip, .p-card, .btn, .magnetic-btn, #deck').forEach(el => {
-      if (el.dataset.cursorBound) return;
-      el.dataset.cursorBound = "true";
-
-      el.addEventListener('mouseenter', () => {
-        ring.classList.add('big');
-        SoundManager.play('hover');
-        const txt = el.dataset.cursor;
-        if (txt) { label.textContent = txt; label.classList.add('show'); }
-      });
-      el.addEventListener('mouseleave', () => {
-        ring.classList.remove('big');
-        label.classList.remove('show');
-      });
-      el.addEventListener('click', () => {
-        SoundManager.play('click');
-      });
-    });
-  }
   
-  // Bind on start and watch DOM
-  document.addEventListener('DOMContentLoaded', bindCursorEffects);
-  window.bindCursorEffects = bindCursorEffects;
+  if (dot && ring && label) {
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    let cursorStarted = false;
+
+    dot.style.opacity = '0';
+    ring.style.opacity = '0';
+    dot.style.transition = 'opacity 0.3s ease';
+    ring.style.transition = 'opacity 0.3s ease, width 0.2s, height 0.2s, background 0.2s';
+
+    window.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+      label.style.left = mx + 'px'; label.style.top = my + 'px';
+      document.documentElement.style.setProperty('--mx', mx + 'px');
+      document.documentElement.style.setProperty('--my', my + 'px');
+
+      if (!cursorStarted) {
+        cursorStarted = true;
+        dot.style.opacity = '1';
+        ring.style.opacity = '1';
+      }
+    });
+
+    function lerpCursor() {
+      rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(lerpCursor);
+    }
+    lerpCursor();
+
+    // Attach hover events
+    function bindCursorEffects() {
+      document.querySelectorAll('a, button, .chip, .p-card, .btn, .magnetic-btn, #deck').forEach(el => {
+        if (el.dataset.cursorBound) return;
+        el.dataset.cursorBound = "true";
+
+        el.addEventListener('mouseenter', () => {
+          ring.classList.add('big');
+          SoundManager.play('hover');
+          const txt = el.dataset.cursor;
+          if (txt) { label.textContent = txt; label.classList.add('show'); }
+        });
+        el.addEventListener('mouseleave', () => {
+          ring.classList.remove('big');
+          label.classList.remove('show');
+        });
+        el.addEventListener('click', () => {
+          SoundManager.play('click');
+        });
+      });
+    }
+    
+    // Bind on start and watch DOM
+    document.addEventListener('DOMContentLoaded', bindCursorEffects);
+    window.bindCursorEffects = bindCursorEffects;
+  }
 }
 
 /* ---------- SYSTEM DIAGNOSTICS HUD ---------- */
@@ -288,6 +291,8 @@ if (!REDUCED && window.matchMedia('(min-width:861px)').matches) {
       }
       updateBattery();
       battery.addEventListener('levelchange', updateBattery);
+    }).catch(() => {
+      if (battEl) battEl.textContent = '100% (AC)';
     });
   } else {
     if (battEl) battEl.textContent = '100% (AC)';
@@ -347,6 +352,7 @@ function decryptEl(el, onDone) {
 }
 
 /* ---------- SCROLL REVEALS (SINGLE-TRIGGER) ---------- */
+// Generous threshold to ensure trigger on modern devices and fast scroll
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -354,10 +360,27 @@ const revealObserver = new IntersectionObserver((entries) => {
       revealObserver.unobserve(entry.target); // Reveal once and stay visible
     }
   });
-}, { threshold: 0.05 });
+}, { threshold: 0.01, rootMargin: "0px 0px 50px 0px" });
 
 function startPageAnims() {
+  // Safe fallback if IntersectionObserver is not supported
+  if (!window.IntersectionObserver) {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    document.querySelectorAll('.decrypt').forEach(el => {
+      const final = el.dataset.text || el.textContent;
+      el.textContent = final;
+    });
+    return;
+  }
+
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Fallback: force reveal all elements after 2.5 seconds in case observer failed to trigger
+  setTimeout(() => {
+    document.querySelectorAll('.reveal:not(.in)').forEach(el => {
+      el.classList.add('in');
+    });
+  }, 2500);
 
   const decryptObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -367,7 +390,7 @@ function startPageAnims() {
         decryptObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.3 });
+  }, { threshold: 0.1 });
   document.querySelectorAll('.decrypt').forEach(el => decryptObserver.observe(el));
 
   // Counter Increments
@@ -379,18 +402,35 @@ function startPageAnims() {
         let cur = 0;
         const duration = 1400;
         const start = performance.now();
+        
+        // Preserve any suffix elements (like <span>+</span>)
+        const span = el.querySelector('span');
+        const spanHtml = span ? span.outerHTML : '';
+        
         function step(t) {
           const progress = Math.min((t - start) / duration, 1);
           cur = Math.floor(progress * target);
-          el.childNodes[0].nodeValue = cur;
+          
+          if (span) {
+            el.innerHTML = cur + spanHtml;
+          } else {
+            el.textContent = cur;
+          }
+          
           if (progress < 1) requestAnimationFrame(step);
-          else el.childNodes[0].nodeValue = target;
+          else {
+            if (span) {
+              el.innerHTML = target + spanHtml;
+            } else {
+              el.textContent = target;
+            }
+          }
         }
         requestAnimationFrame(step);
         countObserver.unobserve(el);
       }
     });
-  }, { threshold: 0.4 });
+  }, { threshold: 0.2 });
   document.querySelectorAll('.stat-num').forEach(el => countObserver.observe(el));
 }
 
@@ -423,6 +463,7 @@ const fxController = (function fx() {
   const canvas = document.getElementById('fx-canvas');
   if (!canvas) return {};
   const ctx = canvas.getContext('2d');
+  if (!ctx) return {};
   let W, H, DPR;
 
   let matrixMode = false;
@@ -788,10 +829,21 @@ const TerminalConsole = (function shell() {
         printLine('  skills    - View technical core competencies');
         printLine('  projects  - Show indexed github repositories');
         printLine('  open <#>  - Open project repository link (1-8) in new tab');
+        printLine('  resume    - Launch interactive resume viewer module');
         printLine('  theme     - Toggle light / dark display theme');
         printLine('  matrix    - Toggle green matrix digital rain mode');
         printLine('  clear     - Wipe shell logs');
         printLine('  exit      - Close secure session link');
+        break;
+
+      case 'cv':
+      case 'resume':
+        printLine('SYS :: Launching interactive CV Viewer module...', 'success-msg');
+        SoundManager.play('success');
+        setTimeout(() => {
+          toggle(); // Close terminal overlay
+          if (window.openCVModal) window.openCVModal(); // Open CV Modal
+        }, 350);
         break;
 
       case 'about':
@@ -908,4 +960,61 @@ const TerminalConsole = (function shell() {
   return { init, toggle };
 })();
 
-document.addEventListener('DOMContentLoaded', TerminalConsole.init);
+/* ---------- INTERACTIVE CV VIEWER (Modal Module) ---------- */
+const CVViewer = (function cvViewer() {
+  const overlay = document.getElementById('cv-overlay');
+  const closeBtn = document.getElementById('cvClose');
+  const triggers = document.querySelectorAll('.resume-trigger');
+
+  function openModal() {
+    if (!overlay) return;
+    overlay.classList.remove('cv-hidden');
+    SoundManager.play('success');
+    document.body.style.overflow = 'hidden'; // Disable background scrolling
+    
+    // Re-bind custom cursor effects to elements inside the modal
+    if (window.bindCursorEffects) {
+      window.bindCursorEffects();
+    }
+  }
+
+  function closeModal() {
+    if (!overlay) return;
+    overlay.classList.add('cv-hidden');
+    SoundManager.play('click');
+    document.body.style.overflow = ''; // Re-enable background scrolling
+  }
+
+  function init() {
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    triggers.forEach(t => t.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal();
+    }));
+
+    // Close when clicking outside container
+    if (overlay) {
+      overlay.addEventListener('click', e => {
+        if (e.target === overlay) {
+          closeModal();
+        }
+      });
+    }
+
+    // Escape key to close
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+  }
+
+  return { init, open: openModal, close: closeModal };
+})();
+window.openCVModal = CVViewer.open;
+window.closeCVModal = CVViewer.close;
+
+document.addEventListener('DOMContentLoaded', () => {
+  TerminalConsole.init();
+  CVViewer.init();
+});
