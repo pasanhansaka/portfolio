@@ -1,11 +1,10 @@
-
 <div align="center">
 
-# ⚡ PASAN.SYS
+# PASAN HANSAKA
 
-### A cinematic, terminal-inspired developer portfolio
+### This is my portfolio — and this is how I built it
 
-**[Live Demo](https://pasanhansaka.github.io/Portfolio/)** · Built with vanilla JS, GSAP & Canvas — no frameworks, no build step
+**[→ Visit the live site](https://pasanhansaka.github.io/Portfolio/)**
 
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
@@ -16,15 +15,17 @@
 
 ---
 
-## 🎬 Overview
+## 👋 Hey, I'm Pasan
 
-This is my personal developer portfolio — designed to feel less like a static résumé and more like **booting into a system**. It opens with a terminal boot sequence, drops you into a reactive particle-network background, and lets you explore my work through a scroll-driven interface *or* a fully functional retro CLI shell.
+I'm a Software Engineering Intern at **Synapse Solutions**, currently building out the Facebook Marketing Campaign feature on the **dwesk Social CRM** platform — wiring the Meta Marketing API into a Java Spring MVC / AngularJS stack. Outside of that, I hold a BSc (Hons) in Software Engineering from the Java Institute for Advanced Technology (affiliated with Birmingham City University, UK).
 
-Everything here — the physics, the sound design, the terminal emulator, the theming — is hand-built in a single-file architecture with **zero frontend frameworks**.
+This repository is my portfolio site — not a template, not a starter kit, just the actual code behind [pasanhansaka.github.io/Portfolio](https://pasanhansaka.github.io/Portfolio/). I wanted a portfolio that didn't feel like a static résumé you skim for ten seconds. So instead of a normal landing page, it boots up like a system, drops you into a reactive particle background, and lets you dig through my work the way I'd actually want to explore someone else's — scroll through it, or drop into a terminal and type your way around.
+
+Everything on the site — the boot sequence, the particle physics, the sound design, the CLI shell — I built by hand, in plain HTML/CSS/JS, with no frameworks and no build step.
 
 ---
 
-## ✨ Key Features
+## ✨ What's on the site
 
 | Feature | Description |
 |---|---|
@@ -55,7 +56,7 @@ Everything here — the physics, the sound design, the terminal emulator, the th
 
 ---
 
-## 📁 Project Structure
+## 📁 How It's Put Together
 
 ```
 Portfolio/
@@ -65,33 +66,31 @@ Portfolio/
 └── README.md
 ```
 
-Single-file-per-concern architecture — no bundler, no build step. Clone it and open `index.html`, or serve it with any static server.
+No bundler, no build step, no npm install — I kept it to three files on purpose so the whole thing stays easy to reason about and easy to keep evolving as I add more to it.
 
----
-
-## 🚀 Running Locally
+If you want to poke around it locally:
 
 ```bash
 git clone https://github.com/pasanhansaka/Portfolio.git
 cd Portfolio
-# then just open index.html in a browser, or serve it:
+# just open index.html — or serve it:
 npx serve .
 ```
 
 ---
 
-## 🧑‍💻 About Me
+## 📬 Get in Touch
 
-I'm **Pasan Hansaka**, a Software Engineering Intern at Synapse Solutions Pvt. Ltd., working on the *dwesk Social CRM* platform. I hold a BSc (Hons) in Software Engineering from the Java Institute for Advanced Technology, affiliated with Birmingham City University, UK.
+Open to freelance work, collaborations, or just talking shop about engineering and design.
 
-- 🌐 Portfolio: [pasanhansaka.github.io/Portfolio](https://pasanhansaka.github.io/Portfolio/)
 - 💼 LinkedIn: [linkedin.com/in/pasanhansaka](https://linkedin.com/in/pasanhansaka)
 - 📧 Email: [pasanhansaka31@gmail.com](mailto:pasanhansaka31@gmail.com)
+- 🌐 Portfolio: [pasanhansaka.github.io/Portfolio](https://pasanhansaka.github.io/Portfolio/)
 
 ---
 
 <div align="center">
 
-**⭐ If this inspired your own portfolio build, a star is always appreciated!**
+<sub>Designed & built by Pasan Hansaka, from Kalutara, Sri Lanka.</sub>
 
 </div>
