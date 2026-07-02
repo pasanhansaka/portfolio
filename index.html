@@ -130,11 +130,30 @@
       <div><span class="label">Focus</span><span class="value">Java · React · Spring</span></div>
     </div>
   </div>
-  <div class="profile-avatar-wrap reveal" data-cursor="ME">
-    <div class="avatar-hud-ring ring-outer"></div>
-    <div class="avatar-hud-ring ring-inner"></div>
-    <div class="profile-avatar-inner">
-      <img src="assets/images/pasan.jpg" alt="Pasan Hansaka" />
+  <div class="hologram-projector reveal" data-cursor="ME">
+    <!-- Viewport for 3D perspective rotated card -->
+    <div class="hologram-viewport">
+      <div class="hologram-card">
+        <!-- Sci-Fi HUD Coordinates and Grid -->
+        <div class="hologram-hud-grid"></div>
+        <div class="hologram-hud-corner tl"></div>
+        <div class="hologram-hud-corner tr"></div>
+        <div class="hologram-hud-corner bl"></div>
+        <div class="hologram-hud-corner br"></div>
+        <div class="hologram-scanline"></div>
+        
+        <div class="hologram-image-inner">
+          <img src="assets/images/pasan.jpg" alt="Pasan Hansaka Hologram" />
+        </div>
+      </div>
+    </div>
+    
+    <!-- Projection light beam cone -->
+    <div class="hologram-beam"></div>
+    
+    <!-- Hologram emitter base / stand -->
+    <div class="hologram-stand">
+      <div class="hologram-flare"></div>
     </div>
   </div>
 </header>
@@ -341,6 +360,16 @@
       <div class="p-tags"><span>JavaScript</span><span>CSS3</span></div>
       <a class="p-link" href="https://github.com/pasanhansaka/Key-Code-Finder-Interactive-Keyboard-Code-Helper" target="_blank" data-cursor="OPEN">View repository →</a>
     </div>
+  </div>
+
+  <!-- Scroll progress indicator -->
+  <div class="deck-progress-bar-wrap reveal">
+    <span class="progress-bracket">[</span>
+    <div class="deck-progress-track">
+      <div class="deck-progress-thumb" id="deckProgressThumb"></div>
+    </div>
+    <span class="progress-bracket">]</span>
+    <span class="deck-progress-pct" id="deckProgressPct">00%</span>
   </div>
 </section>
 

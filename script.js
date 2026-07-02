@@ -237,7 +237,7 @@ if (!REDUCED && window.matchMedia('(min-width:861px)').matches) {
 
     // Attach hover events
     function bindCursorEffects() {
-      document.querySelectorAll('a, button, .chip, .p-card, .btn, .magnetic-btn, #deck, .profile-avatar-wrap').forEach(el => {
+      document.querySelectorAll('a, button, .chip, .p-card, .btn, .magnetic-btn, #deck, .hologram-projector').forEach(el => {
         if (el.dataset.cursorBound) return;
         el.dataset.cursorBound = "true";
 
@@ -753,13 +753,26 @@ window.fxController = fxController;
 (function deckScroll() {
   const deck = document.getElementById('deck');
   if (!deck) return;
+  const thumb = document.getElementById('deckProgressThumb');
+  const pctEl = document.getElementById('deckProgressPct');
   let isDown = false, startX = 0, startScroll = 0, moved = false;
+
+  function updateProgress() {
+    if (!thumb || !pctEl) return;
+    const max = deck.scrollWidth - deck.clientWidth;
+    if (max <= 0) { thumb.style.width = '100%'; pctEl.textContent = '100%'; return; }
+    const ratio = Math.min(deck.scrollLeft / max, 1);
+    const pct = Math.round(ratio * 100);
+    thumb.style.width = pct + '%';
+    pctEl.textContent = String(pct).padStart(2, '0') + '%';
+  }
 
   deck.addEventListener('pointerdown', e => {
     isDown = true; moved = false;
     startX = e.clientX; startScroll = deck.scrollLeft;
     deck.setPointerCapture(e.pointerId);
     deck.style.cursor = 'grabbing';
+    deck.classList.add('dragging');
   });
   deck.addEventListener('pointermove', e => {
     if (!isDown) return;
@@ -770,11 +783,12 @@ window.fxController = fxController;
   function endDrag(e) {
     isDown = false;
     deck.style.cursor = 'grab';
+    deck.classList.remove('dragging');
     if (moved && e) { e.preventDefault(); }
   }
   deck.addEventListener('pointerup', endDrag);
-  deck.addEventListener('pointerleave', () => { isDown = false; deck.style.cursor = 'grab'; });
-  deck.addEventListener('pointercancel', () => { isDown = false; deck.style.cursor = 'grab'; });
+  deck.addEventListener('pointerleave', () => { isDown = false; deck.style.cursor = 'grab'; deck.classList.remove('dragging'); });
+  deck.addEventListener('pointercancel', () => { isDown = false; deck.style.cursor = 'grab'; deck.classList.remove('dragging'); });
 
   deck.addEventListener('click', e => { if (moved) { e.preventDefault(); e.stopPropagation(); } }, true);
 
@@ -785,7 +799,10 @@ window.fxController = fxController;
     }
   }, { passive: false });
 
+  deck.addEventListener('scroll', updateProgress, { passive: true });
   deck.style.cursor = 'grab';
+  // Initialize on load
+  requestAnimationFrame(updateProgress);
 })();
 
 /* ---------- PROJECT CARD 3D HOVER TILT ---------- */
