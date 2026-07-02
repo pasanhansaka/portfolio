@@ -195,6 +195,7 @@ if (!REDUCED && window.matchMedia('(min-width:861px)').matches) {
   const dot = document.getElementById('cdot');
   const ring = document.getElementById('cring');
   const label = document.getElementById('clabel');
+  const bgspot = document.getElementById('bgspot');
   
   if (dot && ring && label) {
     let mx = 0, my = 0, rx = 0, ry = 0;
@@ -207,10 +208,6 @@ if (!REDUCED && window.matchMedia('(min-width:861px)').matches) {
 
     window.addEventListener('mousemove', e => {
       mx = e.clientX; my = e.clientY;
-      dot.style.left = mx + 'px'; dot.style.top = my + 'px';
-      label.style.left = mx + 'px'; label.style.top = my + 'px';
-      document.documentElement.style.setProperty('--mx', mx + 'px');
-      document.documentElement.style.setProperty('--my', my + 'px');
 
       if (!cursorStarted) {
         cursorStarted = true;
@@ -220,15 +217,27 @@ if (!REDUCED && window.matchMedia('(min-width:861px)').matches) {
     });
 
     function lerpCursor() {
-      rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
-      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      // Lerping speed
+      rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15;
+      
+      // Update custom cursor transforms to avoid layout reflows (lag-free)
+      dot.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`;
+      ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
+      label.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(18px, -6px)`;
+
+      // Update background spotlight position directly on bgspot element
+      if (bgspot) {
+        bgspot.style.setProperty('--mx', mx + 'px');
+        bgspot.style.setProperty('--my', my + 'px');
+      }
+
       requestAnimationFrame(lerpCursor);
     }
     lerpCursor();
 
     // Attach hover events
     function bindCursorEffects() {
-      document.querySelectorAll('a, button, .chip, .p-card, .btn, .magnetic-btn, #deck').forEach(el => {
+      document.querySelectorAll('a, button, .chip, .p-card, .btn, .magnetic-btn, #deck, .profile-avatar-wrap').forEach(el => {
         if (el.dataset.cursorBound) return;
         el.dataset.cursorBound = "true";
 
@@ -512,8 +521,9 @@ const fxController = (function fx() {
   }
 
   function buildNodes() {
-    const density = window.innerWidth < 720 ? 25000 : 16000;
-    const count = Math.min(75, Math.round((W * H) / density));
+    // Increased particle density for both mobile and desktop to make it more noticeable
+    const density = window.innerWidth < 720 ? 18000 : 10000;
+    const count = Math.min(120, Math.round((W * H) / density));
     nodes = Array.from({ length: count }, () => {
       const vx = (Math.random() - 0.5) * 0.45;
       const vy = (Math.random() - 0.5) * 0.45;
@@ -524,7 +534,8 @@ const fxController = (function fx() {
         vy: vy,
         baseVx: vx,
         baseVy: vy,
-        r: Math.random() * 1.2 + 0.6
+        // Larger and more noticeable nodes/stars
+        r: Math.random() * 1.8 + 1.2
       };
     });
   }
@@ -637,7 +648,8 @@ const fxController = (function fx() {
           const dx = a.x - b.x, dy = a.y - b.y;
           const d = Math.sqrt(dx * dx + dy * dy);
           if (d < LINK_DIST) {
-            let opacity = (1 - d / LINK_DIST) * 0.16;
+            // Increased line opacity from 0.16 to 0.35 to make the network noticeably visible
+            let opacity = (1 - d / LINK_DIST) * 0.35;
 
             // Extra line glow when mouse is close to the connection midpoint
             if (mouse.active) {
@@ -645,8 +657,8 @@ const fxController = (function fx() {
               const my = (a.y + b.y) / 2;
               const mdx = mx - mouse.x, mdy = my - mouse.y;
               const md = Math.sqrt(mdx * mdx + mdy * mdy);
-              if (md < 110) {
-                opacity += (1 - md / 110) * 0.24;
+              if (md < 120) {
+                opacity += (1 - md / 120) * 0.35;
               }
             }
 
@@ -659,7 +671,8 @@ const fxController = (function fx() {
 
       // 3. Draw nodes
       for (const n of nodes) {
-        ctx.fillStyle = `rgba(${nodeRGB},0.6)`;
+        // Increased node/star opacity from 0.6 to 0.85 for stronger contrast
+        ctx.fillStyle = `rgba(${nodeRGB},0.85)`;
         ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
       }
     }
