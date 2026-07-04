@@ -1061,6 +1061,7 @@ const TerminalConsole = (function shell() {
   let historyIdx = -1;
 
   const projectLinks = [
+    "https://github.com/pasanhansaka/Universal-Contact-API",
     "https://github.com/pasanhansaka/AnyDown",
     "https://github.com/pasanhansaka/GorillaFit",
     "https://github.com/pasanhansaka/HelaChat",
@@ -1147,21 +1148,22 @@ const TerminalConsole = (function shell() {
 
       case 'projects':
         printLine('--- selected github work ---', 'success-msg');
-        printLine('  [1] AnyDown (React, Node, FFmpeg) - platform video downloader');
-        printLine('  [2] GorillaFit (React 19, Tailwind) - modern gym landing page');
-        printLine('  [3] HelaChat (React Native, Firebase) - real-time messaging');
-        printLine('  [4] GlobeMed (Java) - enterprise hospital system');
-        printLine('  [5] GreenBasket (React, Node) - produce e-commerce page');
-        printLine('  [6] Hela Bank (Java) - secure core banking platform');
-        printLine('  [7] 2D Adventure Game (Vanilla JavaScript) - level collision physics');
-        printLine('  [8] Key Code Finder (JavaScript) - keystroke inspector tool');
-        printLine('Type "open <1-8>" to inspect code in browser.');
+        printLine('  [1] Universal-Contact-API (Node.js, SMTP) - secure contact form backend');
+        printLine('  [2] AnyDown (React, Node, FFmpeg) - platform video downloader');
+        printLine('  [3] GorillaFit (React 19, Tailwind) - modern gym landing page');
+        printLine('  [4] HelaChat (React Native, Firebase) - real-time messaging');
+        printLine('  [5] GlobeMed (Java) - enterprise hospital system');
+        printLine('  [6] GreenBasket (React, Node) - produce e-commerce page');
+        printLine('  [7] Hela Bank (Java) - secure core banking platform');
+        printLine('  [8] 2D Adventure Game (Vanilla JavaScript) - level collision physics');
+        printLine('  [9] Key Code Finder (JavaScript) - keystroke inspector tool');
+        printLine('Type "open <1-9>" to inspect code in browser.');
         break;
 
       case 'open':
         const index = parseInt(args[1], 10);
-        if (isNaN(index) || index < 1 || index > 8) {
-          printLine('Error: Invalid project index. Must be a number between 1 and 8.', 'error-msg');
+        if (isNaN(index) || index < 1 || index > 9) {
+          printLine('Error: Invalid project index. Must be a number between 1 and 9.', 'error-msg');
           SoundManager.play('error');
         } else {
           const url = projectLinks[index - 1];
